@@ -9,20 +9,12 @@
             <form @submit.prevent="submitLogin">
 
                 <div class="mb-2 mt-2 me-sm-2 mb-sm-0">
-                    <label class="me-sm-2 d-flex justify-content-left" for="email">
-                        Correo electrónico
-                    </label>
-                    <input class="form-control" id="email" v-model="form.email" name="email"
-                        placeholder="ejemplo@dominio.mx" type="email" required />
+                    <CustomFormInput id="email" type="email" label="Correo electrónico" v-model="form.email" placeholder="ejemplo@dominio.com" />
                     <span v-if="msg.email" class="text-danger">{{ msg.email }}</span>
                 </div>
 
                 <div class="mb-2 mt-2 me-sm-2 mb-sm-0">
-                    <label class="me-sm-2 d-flex justify-content-left" for="password">
-                        Contraseña
-                    </label>
-                    <input class="form-control" id="password" v-model="form.password" name="password" placeholder=""
-                        type="password" required />
+                    <CustomFormInput id="password" type="password" label="Contraseña" v-model="form.password"  />
                     <span v-if="msg.password" class="text-danger">{{ msg.password }}</span>
                     <!--* TEST -->
                 </div>
@@ -37,10 +29,10 @@
 </template>
 
 <script>
-
+import CustomFormInput from "../../components/CustomFormInput.vue";
 export default ({
     components: {
-
+        CustomFormInput
     },
     data: function () {
         return {

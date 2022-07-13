@@ -100,6 +100,12 @@ import NavigationBar from '@/components/NavigationBar.vue'
 
         </div>
         <!-- MODALS -->
+        <!--! TEST -->
+        <!-- <div v-show="modalAddState" class="modalAdd" :click-to-close="true">
+            <ModalForm title="TEST"  />
+        </div> -->
+        <!--! TEST -->
+
         <!-- Modal Agregar nueva especie -->
         <div v-show="modalAddState" class="modalAdd" :click-to-close="true">
             <form @submit.prevent="submitEspecie" class="mx-auto col-10 bg-light border pb-4 px-4 py-2 mt-4 mt-4"
@@ -169,6 +175,8 @@ import NavigationBar from '@/components/NavigationBar.vue'
 </template>
 
 <script>
+import ModalForm from '../components/ModalForm.vue';
+
 export default {
     data: function () {
         return {
