@@ -14,11 +14,16 @@ library.add(faMagnifyingGlass, faPlus, faTrash, faPen);
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+///var cors = require('cors') --> cors()
 
 
 
 const app = createApp(App).component("font-awesome-icon", FontAwesomeIcon) // Creates the App instance of app.vue component ./
 
-app.use(router, BootstrapVue, BootstrapVueIcons); // All routes are going to be defined in router
+app.use(router, BootstrapVue, BootstrapVueIcons, VueAxios, axios); // All routes are going to be defined in router
+//app.use(VueAxios, axios)
+
 
 app.mount('#app') // Mounts the App instance searching for the id=app

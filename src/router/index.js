@@ -5,6 +5,7 @@ import LoginView from '../views/Public/LoginView.vue';
 import HomeView from '../views/HomeView.vue'
 import EspeciesView from '../views/EspeciesView.vue';
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [

@@ -7,6 +7,12 @@
                 src="https://upload.wikimedia.org/wikipedia/commons/5/50/ECOSUR.jpg" />
             <!-- FORM START -->
             <form @submit.prevent="submitLogin">
+                <div v-if="msg.error" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ msg.error }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="errorMessage">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
                 <div class="mb-2 mt-2 me-sm-2 mb-sm-0">
                     <CustomFormInput id="email" type="email" label="Correo electrónico" v-model="form.email" placeholder="ejemplo@dominio.com" />
@@ -30,6 +36,8 @@
 
 <script>
 import CustomFormInput from "../../components/CustomFormInput.vue";
+import axios from "axios";
+
 export default ({
     components: {
         CustomFormInput
@@ -45,11 +53,9 @@ export default ({
     },
     watch: {
         'form.password'(value) {
-            //this.form.password = value;
             this.validatePassword(value);
         },
         'form.email'(value) {
-            //this.form.password = value;
             this.validateEmail(value);
         }
     },
@@ -58,11 +64,8 @@ export default ({
             let difference = 8 - value.length;
             if (value.length < 8) {
                 this.msg['password'] = '¡Contraseña debe tener 8 caracteres! ' + difference + ' faltan';
-                //console.log(this.msg['password']);
-                // this.disabled = [this.disabled[1], true]
             } else {
                 this.msg['password'] = '';
-                // this.disabled = [this.disabled[1], false]
             }
         },
         validateEmail(value) {
@@ -74,13 +77,30 @@ export default ({
         },
 
         submitLogin: function () {
-            var data = JSON.stringify({
-                email: this.form.email,
-                password: this.form.password
-            })
-            console.log(data);
-            // console.log(this.form.password)
-            // console.log(this.form.email)
+            if (this.msg['email'] == '' && this.msg['password'] == '') {
+                var data = {
+                    "username": this.form.email,
+                    "password": this.form.password
+                }
+                // Async and await
+                axios.post('http://localhost:8080/authenticate', data)
+                    .then(response => {
+                        //this.error = response.data;
+                        console.log(response.data);
+                        //this.$router.push('/admin/especies');
+                    })
+                    .catch(error => {
+                        console.log("LOGIN ERROR :"+error)
+                        //this.error = true
+                    })
+
+                console.log(data);
+            } else {
+                this.msg['error'] = "Verificar los campos correo electrónico y contraseña";
+            }
+        },
+        errorMessage() {
+            this.msg['error'] = '';
         }
     }
 
