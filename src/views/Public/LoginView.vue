@@ -36,7 +36,7 @@
 
 <script>
 import CustomFormInput from "../../components/CustomFormInput.vue";
-import axios from "axios";
+import { loginUser } from '../../utils/auth'
 
 export default ({
     components: {
@@ -75,30 +75,47 @@ export default ({
                 this.msg['email'] = '¡Correo electrónico invalido!';
             }
         },
-
-        submitLogin: function () {
+        // -- NEW LOGIN METHODS -- 
+        submitLogin: async function () {
             if (this.msg['email'] == '' && this.msg['password'] == '') {
-                var data = {
-                    "username": this.form.email,
-                    "password": this.form.password
+                var data = { "username": this.form.email, "password": this.form.password }
+                try {
+                    console.log(data.username +"--"+data.password);
+                    await loginUser(data.username, data.password)
+                    this.$router.push('/admin/especies')
                 }
-                // Async and await
-                axios.post('http://localhost:8080/authenticate', data)
-                    .then(response => {
-                        //this.error = response.data;
-                        console.log(response.data);
-                        //this.$router.push('/admin/especies');
-                    })
-                    .catch(error => {
-                        console.log("LOGIN ERROR :"+error)
-                        //this.error = true
-                    })
-
-                console.log(data);
+                catch (err) {
+                    // alert(`Error: ${err}`)
+                    this.msg['error'] = "Credenciales incorrectas! verificar correo electrónico y contraseña";
+                }
             } else {
-                this.msg['error'] = "Verificar los campos correo electrónico y contraseña";
+                this.msg['error'] = "Completa correctamente los campos correo electrónico y contraseña";
             }
         },
+
+        // submitLogin: async function () {
+        //     if (this.msg['email'] == '' && this.msg['password'] == '') {
+        //         var data = {
+        //             "username": this.form.email,
+        //             "password": this.form.password
+        //         }
+        //         // Async and await
+        //         await axios.post('http://localhost:8080/authenticate', data)
+        //             .then(response => {
+        //                 //this.error = response.data;
+        //                 alert(`Token received: ${response.data.jwtToken}`)
+        //                 //this.$router.push('/admin/especies');
+        //             })
+        //             .catch(error => {
+        //                 //console.log("LOGIN ERROR :"+error)
+        //                 this.msg['error'] = "Credenciales incorrectas! verificar correo electrónico y contraseña";
+        //                 //this.error = true
+        //             })
+        //     } else {
+        //         this.msg['error'] = "Verificar los campos correo electrónico y contraseña";
+        //     }
+        // },
+        
         errorMessage() {
             this.msg['error'] = '';
         }

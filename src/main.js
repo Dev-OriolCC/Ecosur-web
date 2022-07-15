@@ -7,9 +7,6 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faMagnifyingGlass, faPlus, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faMagnifyingGlass, faPlus, faTrash, faPen);
-
-
-
 // require('./bootstrap'); // New import bootstrap
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';

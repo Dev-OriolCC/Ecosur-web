@@ -7,16 +7,23 @@
         <h5 class="mt-4 font-weight-normal navItem">Parcelas</h5>
         <h5 class="mt-4 font-weight-normal navItem">Árboles</h5>
         <h5 class="mt-4 font-weight-normal navItem">Gráficas</h5> <br>
-
-        <RouterLink to="/" class="navItem">
-            <h5 class="mt-4 font-weight-normal">Salir</h5>
-        </RouterLink>
+        <h5 class="mt-4 font-weight-normal navItem" @click="logout" >Salir</h5>
     </div>
 </template>
 <script>
+import { logoutUser } from '../utils/auth'
 
+    export default ({
+        methods: {
+            logout() {
+                logoutUser();
+                window.location.reload();
+            }
+        }
+    })
 </script>
 <style>
+    
     .navItem {
         text-decoration: none; color: inherit;
     }
