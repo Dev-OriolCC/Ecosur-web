@@ -1,9 +1,10 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 
-
-const REST_ENDPOINT = 'http://localhost:8080/';
+const REST_ENDPOINT = 'http://localhost:8080/'; 
 const AUTH_TOKEN_KEY = 'authToken';
+
+// Archivo con todos los metodos para hacer la autenticación con JWT + API REST (Java+SpringBoot)
 
 export function loginUser(username, password) {
     return new Promise(async (resolve, reject) => {

@@ -2,9 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 // Public Routes
 import LoginView from '../views/Public/LoginView.vue';
 // Private Routes
-import HomeView from '../views/HomeView.vue'
 import EspeciesView from '../views/EspeciesView.vue';
+
+// Metodo para verificar si el usuario ya inicio sesión
 import { isLoggedIn } from '../utils/auth';
+
+// En este archivo se definen todas las rutas asi como las que son protegidas
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,19 +21,11 @@ const router = createRouter({
         allowAnonymous: true
       }
     },
-    //? Authentication routes
+    //? Authentication routes [Needs to login first]
     {
       path: '/admin/especies',
       name: 'especies',
       component: EspeciesView
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
     }
   ]
 })

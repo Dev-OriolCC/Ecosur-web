@@ -1,5 +1,5 @@
 <script setup>
-import NavigationBar from '@/components/NavigationBar.vue'
+import NavigationBar from '@/components/NavigationBar.vue' // Barra de navegacio'n
 
 </script>
 <template >
@@ -7,7 +7,7 @@ import NavigationBar from '@/components/NavigationBar.vue'
         <NavigationBar />
         <!-- Page content wrapper-->
         <div id="page-content-wrapper" class="container mx-auto " @click="closeModalActivated">
-            <!-- explicit style -->
+            <!-- Buscador y boton de agregar [Especie] -->
             <form class="form-search content-search navbar-form" action="#" method="GET">
                 <div class="input-group">
                     <input placeholder="Buscar Especie" class="form-control form-text mt-3" type="text" name="search"
@@ -27,7 +27,7 @@ import NavigationBar from '@/components/NavigationBar.vue'
                 </div>
             </form>
 
-            <!-- Cargando Animatioon -->
+            <!-- Cargando Animation -->
             <div v-if="loading">
                 <div class="text-center " style="color: #63CAA7;">
                     <div class="spinner-border mt-5" role="status" style="width: 6rem; height: 6rem;">
@@ -37,7 +37,7 @@ import NavigationBar from '@/components/NavigationBar.vue'
             </div>
             <!-- Tabla con especies -->
             <div v-else class="table-responsive mx-auto">
-                <table class="table mt-4">
+                <table class="table mt-4" v-if="species.length > 0">
                     <thead class="table-primary">
                         <tr>
                             <th>Nombre</th>
@@ -47,54 +47,26 @@ import NavigationBar from '@/components/NavigationBar.vue'
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Caoba</td>
-                            <td>20</td>
+                        <tr v-for="specie in species">
+                            <td>{{specie.name}}</td>
+                            <td>{{specie.total}}</td>
                             <td>
                                 <button class="btn" style="background-color: #26798E; color: white;"
-                                    @click="showModalEdit('900','Caoba')"
+                                    @click="showModalEdit(specie.id, specie.name, specie.total)"
                                 >
                                     <font-awesome-icon icon="fa-solid fa-pen" />
                                 </button>
                             </td>
                             <td>
-                                <button class="btn btn-danger" @click="showModalDelete('900','Caoba', '20')">
+                                <button class="btn btn-danger" @click="showModalDelete(specie.id, specie.name, specie.total)">
                                     <font-awesome-icon icon="fa-solid fa-trash" />
                                 </button>
                             </td>
                         </tr>
-                        <tr>
-                            <td>Cedro Blanco</td>
-                            <td>0</td>
-                            <td>
-                                <button class="btn" style="background-color: #26798E; color: white;"
-                                @click="showModalEdit('400','Cedro Blanco')">
-                                    <font-awesome-icon icon="fa-solid fa-pen" />
-                                </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-danger" @click="showModalDelete('400','Cedro Blanco', '0')">
-                                    <font-awesome-icon icon="fa-solid fa-trash" />
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Eucalipto</td>
-                            <td>32</td>
-                            <td>
-                                <button class="btn" style="background-color: #26798E; color: white;"
-                                @click="showModalEdit('800','Eucalipto')">
-                                    <font-awesome-icon icon="fa-solid fa-pen" />
-                                </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-danger" @click="showModalDelete('800','Eucalipto', '32')">
-                                    <font-awesome-icon icon="fa-solid fa-trash" />
-                                </button>
-                            </td>
-                        </tr>
+                        
                     </tbody>
                 </table>
+                <p v-else class="text-danger mt-4" >No hay especies :( </p>
             </div>
             <!-- / Tabla con especies -->
 
@@ -119,7 +91,11 @@ import NavigationBar from '@/components/NavigationBar.vue'
                     <label class="me-sm-2 d-flex justify-content-left" for="nombre">
                         Nombre Especie
                     </label>
-                    <input class="form-control" id="nombre" v-model="form.nombre" name="nombre" type="text" />
+                    <input class="form-control" id="name" v-model="form.name" name="nombre" type="text" required/>
+                    <label class="me-sm-2 d-flex justify-content-left" for="total">
+                        Total Árboles
+                    </label>
+                    <input class="form-control" id="total" v-model="form.total" name="total" type="number" min="0" required/>
                 </div>
 
                 <button outline class="btn text-white me-sm-2 mt-4 d-flex justify-content-left" type="submit"
@@ -128,11 +104,11 @@ import NavigationBar from '@/components/NavigationBar.vue'
         </div>
         <!-- Final modal agregar nueva especie -->
 
-        <!-- Modal Agregar nueva especie -->
+        <!-- Modal editar nueva especie -->
         <div v-show="modalEditState" class="modalAdd" :click-to-close="true">
             <form @submit.prevent="editEspecie" class="mx-auto col-10 bg-light border pb-4 px-4 py-2 mt-4 mt-4"
                 style="box-shadow: 0 2px 8px rgba(0, 0, 0, .33);">
-                <button type="button" class="close text-black" @click="showModalEdit(editModal.id, editModal.nombre)" data-dismiss="modal"
+                <button type="button" class="close text-black" @click="showModalEdit(editModal.id, editModal.name, editModal.total)" data-dismiss="modal"
                     aria-label="Close">
                     <span aria-hidden="true" class="" style="font-size: 28px;">&times;</span>
                 </button>
@@ -141,16 +117,20 @@ import NavigationBar from '@/components/NavigationBar.vue'
                     <label class="me-sm-2 d-flex justify-content-left" for="nombre">
                         Nombre Especie
                     </label>
-                    <input class="form-control" id="nombre" v-model="editModal.nombre" name="nombre" type="text" />
+                    <input class="form-control" id="nombre" v-model="editModal.name" name="nombre" type="text" />
+                    <label class="me-sm-2 d-flex justify-content-left" for="total">
+                        Total Árboles
+                    </label>
+                    <input class="form-control" id="total" v-model="editModal.total" name="total" type="number" min="0" required/>
                 </div>
 
                 <button outline class="btn text-white me-sm-2 mt-4 d-flex justify-content-left" type="submit"
                     style="background-color: #63CAA7;">Actualizar</button>
             </form>
         </div>
-        <!-- Final modal agregar nueva especie -->
+        <!-- Final modal editar nueva especie -->
 
-        <!-- Modal Agregar nueva especie -->
+        <!-- Modal eleminar nueva especie -->
         <div v-show="modalDeleteState" class="modalAdd" :click-to-close="true">
             <form @submit.prevent="deleteEspecie" class="mx-auto col-10 bg-light border pb-4 px-4 py-2 mt-4 mt-4"
                 style="box-shadow: 0 2px 8px rgba(0, 0, 0, .33);">
@@ -169,28 +149,36 @@ import NavigationBar from '@/components/NavigationBar.vue'
                 </div>
             </form>
         </div>
-        <!-- Final modal agregar nueva especie -->
+        <!-- Final modal eleminar nueva especie -->
 
     </div>
 </template>
 
 <script>
 import ModalForm from '../components/ModalForm.vue';
+const REST_ENDPOINT = 'http://localhost:8080/'; 
+import axios from 'axios';
+import { getAuthToken } from "../utils/auth";
 
 export default {
     data: function () {
         return {
-            clickyBackgrond: false, // General para el fondo
+            clickyBackgrond: false, // Estado General para el fondo
             loading: true,
+            // Estados para cada modal Agregar-Editar-Eliminar
             modalAddState: false,
             modalEditState: false,
             modalDeleteState: false,
+            species: [],
+            // Formularios Agregar-Editar-Eliminar
             form: {
-                'nombre': '',
+                'name': '',
+                'total': '',
             },
             editModal: {
                 'id': '',
-                'nombre': '',
+                'name': '',
+                'total': 0,
             },
             deleteModal: {
                 'id': '',
@@ -200,15 +188,80 @@ export default {
         }
     },
     methods: {
+        // Loading 
+        setTimeout: async function(time) {
+            await (() => (this.loading = true), time)
+            this.loading = false;
+        },
+        // Cargar Especies
+        loadSpecies: async function () {
+            let response = await axios({
+                url: `${REST_ENDPOINT}api/specie/getSpecies`,
+                method: 'GET',
+                Headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (response.status == 200) {
+                this.species = response.data;
+            }
+        },
+        // Agregar Especie
+        addSpecieAPI: async function (data) {
+            let response = await axios({
+                url: `${REST_ENDPOINT}api/specie/addSpecie`,
+                method: 'POST',
+                Headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            })
+            this.loading = true;
+            setTimeout(() => (this.loading = false), 500);
+            this.loadSpecies();
+        },
+        // Eliminar Especie
+        deleteSpecieAPI: async function (id) {
+            let response = await axios({
+                url: `${REST_ENDPOINT}api/specie/deleteSpecie/${id}`,
+                method: 'DELETE',
+                Headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            //this.loadSpecies()
+            // Fix reload issue while fetching species from REST API
+            this.loading = true;
+            setTimeout(() => (this.loading = false), 500);
+            this.loadSpecies();
+            //window.location.reload();
+        },
+        // Actualizar Especie
+        updateSpecieAPI: async function (data) {
+            let response = await axios({
+                url: `${REST_ENDPOINT}api/specie/updateSpecie/${data.id}`,
+                method: 'PUT',
+                Headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            })
+            this.loading = true;
+            setTimeout(() => (this.loading = false), 500);
+            this.loadSpecies();
+        },
+
+        // ---- MODALES [ESTADOS] ---- 
         // Agregar [Mostrar Modal]
         showModalAdd() {
             this.modalAddState = !this.modalAddState;
             // console.log("Add = "+this.modalAddState);
         },
         // Edit [Mostrar Modal]
-        showModalEdit(id, nombre) {
+        showModalEdit(id, nombre, total) {
             this.modalEditState = !this.modalEditState;
-            this.editModal.nombre = nombre;
+            this.editModal.name = nombre;
+            this.editModal.total = total;
             this.editModal.id = id;
             // console.log("modalEditState: "+this.modalEditState);
         },
@@ -222,64 +275,67 @@ export default {
         // -- SECCION DE ENVIO A APIS -- 
         // Agregar API
         submitEspecie: function () {
-            var data = JSON.stringify({
-                nombre: this.form.nombre,
-            })
-            console.log(data);
+            var data = {
+                name: this.form.name,
+                total: this.form.total,
+            }
             // Enviar a API
-
+                this.addSpecieAPI(data);
             //
             this.showModalAdd();
             this.form.nombre = '';
-            this.loading = true;
-            setTimeout(() => (this.loading = false), 500);
+            this.form.total = 0;
         },
         // Editar API
         editEspecie: function () {
-            var data = JSON.stringify({
+            var data = {
                 id: this.editModal.id,
-                nombre: this.editModal.nombre,
-            })
-            console.log(data)
+                name: this.editModal.name,
+                total: this.editModal.total,
+            }
             // Enviar a API
-
+                this.updateSpecieAPI(data);
             //
-            this.showModalEdit(this.editModal.id, this.editModal.nombre);
-            this.editModal.nombre = '';
+            this.showModalEdit(this.editModal.id, this.editModal.name);
+            this.editModal.name = '';
             this.editModal.id = '';
+            this.editModal.total = 0;
             this.loading = true;
             setTimeout(() => (this.loading = false), 500);
         },
         // Eliminar API
         deleteEspecie: function () {
-            var data = JSON.stringify({
-                id: this.deleteModal.id,
-            })
-            console.log(data)
+            
             // Enviar a API
-
+                this.deleteSpecieAPI(this.deleteModal.id);
             //
             this.showModalDelete(this.deleteModal.id, this.deleteModal.nombre, this.deleteModal.total);
-            this.editModal.id = '';
-            this.editModal.nombre = '';
-            this.editModal.total = '';
-            this.loading = true;
-            setTimeout(() => (this.loading = false), 500);
+            this.deleteModal.id = '';
+            this.deleteModal.nombre = '';
+            this.deleteModal.total = 0;
+            // this.loading = true;
+            // setTimeout(() => (this.loading = false), 500);
+            // this.loadSpecies()
         },
-
+        // Cerrar modal independiente de que tipo es....
         closeModalActivated() {
             if (this.clickyBackgrond == true) {
                 this.modalAddState = false;
                 this.modalEditState = false;
                 this.modalDeleteState = false;
                 // this.clickyBackgrond = false; Needs to be tested  
-                console.log("Close modal")
             }
         }
     },
+    // Animation de loading en cuanto se cargue esta vista [Especies]
     mounted() {
-        setTimeout(() => (this.loading = false), 2000);
+        //this.setTimeout(1000);
+        setTimeout(() => (this.loading = false), 300)
+        //loadSpecies(this.species)
+        this.loadSpecies()
     },
+    // Watch para observar en todo momento, en cuanto se active un modal hacer el fondo 
+    // elegible a cerrar el modal con un click!
     watch: {
         'modalAddState'(value) {
             if (value == true) {
