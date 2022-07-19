@@ -331,7 +331,6 @@ export default {
     mounted() {
         //this.setTimeout(1000);
         setTimeout(() => (this.loading = false), 300)
-        //loadSpecies(this.species)
         this.loadSpecies()
     },
     // Watch para observar en todo momento, en cuanto se active un modal hacer el fondo 
