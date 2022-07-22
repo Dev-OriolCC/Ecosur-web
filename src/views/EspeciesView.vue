@@ -156,7 +156,9 @@ import NavigationBar from '@/components/NavigationBar.vue' // Barra de navegacio
 
 <script>
 import ModalForm from '../components/ModalForm.vue';
-const REST_ENDPOINT = 'http://localhost:8080/'; 
+// const REST_ENDPOINT = 'http://localhost:8080/'; 
+const REST_ENDPOINT = 'https://ecosur-apirest.herokuapp.com/'; 
+
 import axios from 'axios';
 import { getAuthToken } from "../utils/auth";
 
