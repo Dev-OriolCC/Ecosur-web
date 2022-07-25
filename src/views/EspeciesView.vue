@@ -190,11 +190,6 @@ export default {
         }
     },
     methods: {
-        // Loading 
-        setTimeout: async function(time) {
-            await (() => (this.loading = true), time)
-            this.loading = false;
-        },
         // Cargar Especies
         loadSpecies: async function () {
             let response = await axios({
@@ -207,9 +202,11 @@ export default {
             if (response.status == 200) {
                 this.species = response.data;
             }
+            this.loading = false;
         },
         // Agregar Especie
         addSpecieAPI: async function (data) {
+            this.loading = true;
             let response = await axios({
                 url: `${REST_ENDPOINT}api/specie/addSpecie`,
                 method: 'POST',
@@ -218,12 +215,13 @@ export default {
                 },
                 data: data
             })
-            this.loading = true;
-            setTimeout(() => (this.loading = false), 500);
+            // this.loading = true;
+            // setTimeout(() => (this.loading = false), 500);
             this.loadSpecies();
         },
         // Eliminar Especie
         deleteSpecieAPI: async function (id) {
+            this.loading = true;
             let response = await axios({
                 url: `${REST_ENDPOINT}api/specie/deleteSpecie/${id}`,
                 method: 'DELETE',
@@ -233,13 +231,12 @@ export default {
             })
             //this.loadSpecies()
             // Fix reload issue while fetching species from REST API
-            this.loading = true;
-            setTimeout(() => (this.loading = false), 500);
             this.loadSpecies();
             //window.location.reload();
         },
         // Actualizar Especie
         updateSpecieAPI: async function (data) {
+            this.loading = true;
             let response = await axios({
                 url: `${REST_ENDPOINT}api/specie/updateSpecie/${data.id}`,
                 method: 'PUT',
@@ -248,8 +245,7 @@ export default {
                 },
                 data: data
             })
-            this.loading = true;
-            setTimeout(() => (this.loading = false), 500);
+            // setTimeout(() => (this.loading = false), 500);
             this.loadSpecies();
         },
 
@@ -257,7 +253,9 @@ export default {
         // Agregar [Mostrar Modal]
         showModalAdd() {
             this.modalAddState = !this.modalAddState;
-            // console.log("Add = "+this.modalAddState);
+            this.form.name = '';
+            this.form.total = 0;
+            // console.log("Add = "+his.modalAddState);
         },
         // Edit [Mostrar Modal]
         showModalEdit(id, nombre, total) {
@@ -277,10 +275,7 @@ export default {
         // -- SECCION DE ENVIO A APIS -- 
         // Agregar API
         submitEspecie: function () {
-            var data = {
-                name: this.form.name,
-                total: this.form.total,
-            }
+            var data = { name: this.form.name, total: this.form.total, }
             // Enviar a API
                 this.addSpecieAPI(data);
             //
@@ -302,12 +297,11 @@ export default {
             this.editModal.name = '';
             this.editModal.id = '';
             this.editModal.total = 0;
-            this.loading = true;
-            setTimeout(() => (this.loading = false), 500);
+            //this.loading = true;
+            //setTimeout(() => (this.loading = false), 500);
         },
         // Eliminar API
         deleteEspecie: function () {
-            
             // Enviar a API
                 this.deleteSpecieAPI(this.deleteModal.id);
             //
@@ -331,8 +325,8 @@ export default {
     },
     // Animation de loading en cuanto se cargue esta vista [Especies]
     mounted() {
-        //this.setTimeout(1000);
-        setTimeout(() => (this.loading = false), 300)
+        this.loading = true;
+        //setTimeout(() => (this.loading = false), 300)
         this.loadSpecies()
     },
     // Watch para observar en todo momento, en cuanto se active un modal hacer el fondo 

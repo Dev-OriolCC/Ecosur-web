@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/Public/LoginView.vue';
 // Private Routes
 import EspeciesView from '../views/EspeciesView.vue';
+import ChartsView from '../views/ChartsView.vue';
 
 // Metodo para verificar si el usuario ya inicio sesión
 import { isLoggedIn } from '../utils/auth';
@@ -26,7 +27,13 @@ const router = createRouter({
       path: '/admin/especies',
       name: 'especies',
       component: EspeciesView
+    },
+    {
+      path: '/admin/graficas',
+      name: 'graficas',
+      component: ChartsView
     }
+
   ]
 })
 
